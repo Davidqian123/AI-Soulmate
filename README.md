@@ -1,4 +1,4 @@
-## NexaAI SDK Demo: AI Soulmate
+## Nexa SDK Demo: AI Soulmate
 
 ### Introduction:
 
@@ -86,6 +86,6 @@ More new features and improvements will follow:
 ### Resources:
 
 - [NexaAI | Model Hub](https://nexaai.com/models)
-- [NexaAI | Inference with GGUF models](https://docs.nexaai.com/sdk/inference/gguf)
+- [GitHub | Nexa-SDK](https://github.com/NexaAI/nexa-sdk)
 - [GitHub | BARK](https://github.com/suno-ai/bark)
 - [Text to speech - OpenAI API](https://platform.openai.com/docs/guides/text-to-speech)
