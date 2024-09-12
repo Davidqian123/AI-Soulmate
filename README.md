@@ -1,6 +1,6 @@
 ## Nexa SDK Demo: AI Soulmate
 
-### Introduction:
+### Introduction
 
 This project is an AI chatbot that interacts with users via text and voice. The project offers two options for voice output: using the **Bark** model for on-device text-to-speech or the **OpenAI TTS API** for cloud-based text-to-speech. **Bark** will be slow to generate speech without using GPU, but it's on device. The **OpenAI TTS API** has the advantage in terms of speed, but it is cloud-based and requires you to have an OPENAI API KEY. Each option is designed to provide flexibility based on the user's resources and preferences.You can also choose other options according to your preference.
 
@@ -29,7 +29,7 @@ This project is an AI chatbot that interacts with users via text and voice. The 
   <img src="https://public-storage.nexa4ai.com/ai_soulmate.png" alt="Technical Architecture" width="50%">
 </p>
 
-### Setup:
+### Setup
 
 #### Bark Voice Output
 
@@ -83,7 +83,7 @@ More new features and improvements will follow:
 5. Voice Training & Upload:
   - Allow users to train the AI's voice model or upload custom voice data to create a personalized AI experience.
 
-### Resources:
+### Resources
 
 - [NexaAI | Model Hub](https://nexaai.com/models)
 - [GitHub | Nexa-SDK](https://github.com/NexaAI/nexa-sdk)
