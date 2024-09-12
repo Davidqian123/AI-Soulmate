@@ -58,6 +58,31 @@ pip install -r openai_requirements.txt
 - Run the Streamlit app: `streamlit run openai_voice_out/app.py`
 - Start a chat with text or voice as you like
 
+### Roadmap
+
+More new features and improvements will follow:
+
+1. More flexible customization for:
+  - Name: Ability to set a custom name for the AI character.
+  - Gender: Define the gender of the AI character.
+  - Avatar & Image Upload: Allow users to upload a custom avatar or image representing the AI character.
+  - Description: Set a background or description for the AI character.
+  - Voice: Provide options to customize the voice of the AI character.
+  - Greetings: Configure initial greetings or introduction phrases.
+  - NSFW/Violence Switch: Implement a switch to toggle between safe-for-work and NSFW/violence modes.
+
+2. Long-term Memory with mem0:
+  - Integrate a memory system allowing the AI to retain and recall information over multiple sessions.
+
+3. Multimodal Input & Output:
+  - Support for various input and output modes, including text, image, and voice.
+
+4. Image & Avatar Generation:
+  - Enhance AI capabilities to generate images and avatars based on user inputs.
+
+5. Voice Training & Upload:
+  - Allow users to train the AI's voice model or upload custom voice data to create a personalized AI experience.
+
 ### Resources:
 
 - [NexaAI | Model Hub](https://nexaai.com/models)
