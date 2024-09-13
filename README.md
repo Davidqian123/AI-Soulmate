@@ -1,4 +1,4 @@
-## Nexa SDK Demo: AI Soulmate
+## AI Soulmate
 
 ### Introduction
 
