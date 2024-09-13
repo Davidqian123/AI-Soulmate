@@ -10,11 +10,13 @@
 
 ### Introduction
 
-This project is an AI chatbot that interacts with users via text and voice. The project offers two options for voice output: using the **Bark** model for on-device text-to-speech or the **OpenAI TTS API** for cloud-based text-to-speech. **Bark** will be slow to generate speech without using GPU, but it's on device. The **OpenAI TTS API** has the advantage in terms of speed, but it is cloud-based and requires you to have an OPENAI API KEY. Each option is designed to provide flexibility based on the user's resources and preferences.You can also choose other options according to your preference.
+This project is an interactive AI character with voice input, voice output, and profile image generation—all running locally with Nexa SDK and powered by Llama3 Uncensored Model. The project offers two options for voice output: using the **Bark** model for on-device text-to-speech or the **OpenAI TTS API** for cloud-based text-to-speech. **Bark** will be slow to generate speech without using GPU, but it's on device. The **OpenAI TTS API** has the advantage in terms of speed, but it is cloud-based and requires you to have an OPENAI API KEY. Each option is designed to provide flexibility based on the user's resources and preferences.You can also choose other options according to your preference.
 
 - Key features:
 
-  - On-device Character AI
+  - Voice in, voice out
+  - Local image generation
+  - Uncensored model
   - No privacy concerns
 
 - File structure:
