@@ -2,7 +2,11 @@
 
 ### Demo Video
 
-[![AI Soulmate Demo](https://img.youtube.com/vi/K_hloPhka7M/0.jpg)](https://www.youtube.com/watch?v=K_hloPhka7M)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=K_hloPhka7M">
+    <img src="https://img.youtube.com/vi/K_hloPhka7M/0.jpg" alt="AI Soulmate Demo">
+  </a>
+</p>
 
 ### Introduction
 
