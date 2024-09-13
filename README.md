@@ -3,8 +3,8 @@
 ### Demo Video
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=K_hloPhka7M">
-    <img src="https://img.youtube.com/vi/K_hloPhka7M/0.jpg" alt="AI Soulmate Demo">
+  <a href="https://www.youtube.com/watch?v=3eb_MPu96pU">
+    <img src="https://img.youtube.com/vi/3eb_MPu96pU/0.jpg" alt="AI Soulmate Demo">
   </a>
 </p>
 
