@@ -1,5 +1,9 @@
 ## AI Soulmate
 
+### Demo Video
+
+[![AI Soulmate Demo](https://img.youtube.com/vi/K_hloPhka7M/0.jpg)](https://www.youtube.com/watch?v=K_hloPhka7M)
+
 ### Introduction
 
 This project is an AI chatbot that interacts with users via text and voice. The project offers two options for voice output: using the **Bark** model for on-device text-to-speech or the **OpenAI TTS API** for cloud-based text-to-speech. **Bark** will be slow to generate speech without using GPU, but it's on device. The **OpenAI TTS API** has the advantage in terms of speed, but it is cloud-based and requires you to have an OPENAI API KEY. Each option is designed to provide flexibility based on the user's resources and preferences.You can also choose other options according to your preference.
