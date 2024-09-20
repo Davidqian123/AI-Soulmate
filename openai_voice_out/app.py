@@ -6,14 +6,15 @@ from utils.transcribe import record_and_transcribe
 from utils.gen_response import generate_chat_response, generate_and_play_response
 from PIL import Image
 
-img = Image.open("../nexalogo.png")
+img = Image.open("./nexalogo.png")
 st.set_page_config(page_title="AI Soulmate", page_icon=img)
 
 ai_avatar = generate_ai_avatar()
 default_model = "llama3-uncensored"
 
+
 def main():
-    col1, col2 = st.columns([5,5], vertical_alignment = "center")
+    col1, col2 = st.columns([5, 5], vertical_alignment="center")
     with col1:
         st.title("AI Soulmate")
     with col2:
@@ -45,7 +46,9 @@ def main():
     max_new_tokens = st.sidebar.slider(
         "Max New Tokens", 1, 1000, st.session_state.nexa_model.params["max_new_tokens"]
     )
-    top_k = st.sidebar.slider("Top K", 1, 100, st.session_state.nexa_model.params["top_k"])
+    top_k = st.sidebar.slider(
+        "Top K", 1, 100, st.session_state.nexa_model.params["top_k"]
+    )
     top_p = st.sidebar.slider(
         "Top P", 0.0, 1.0, st.session_state.nexa_model.params["top_p"]
     )
@@ -72,7 +75,9 @@ def main():
     if st.button("🎙️ Start Voice Chat"):
         transcribed_text = record_and_transcribe()
         if transcribed_text:
-            st.session_state.messages.append({"role": "user", "content": transcribed_text})
+            st.session_state.messages.append(
+                {"role": "user", "content": transcribed_text}
+            )
             with st.chat_message("user"):
                 st.markdown(transcribed_text)
 
@@ -93,17 +98,22 @@ def main():
                 response_placeholder.markdown(full_response)
 
             audio_path = generate_and_play_response(full_response)
-            
+
             with open(audio_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
                 audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-            st.markdown(f"""
+            st.markdown(
+                f"""
                 <audio autoplay>
                     <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
                 </audio>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
 
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.messages.append(
+                {"role": "assistant", "content": full_response}
+            )
 
     if prompt := st.chat_input("Say something..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -127,17 +137,23 @@ def main():
             response_placeholder.markdown(full_response)
 
         audio_path = generate_and_play_response(full_response)
-        
+
         with open(audio_path, "rb") as audio_file:
             audio_bytes = audio_file.read()
             audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        st.markdown(f"""
+        st.markdown(
+            f"""
             <audio autoplay>
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.messages.append(
+            {"role": "assistant", "content": full_response}
+        )
+
 
 if __name__ == "__main__":
     main()
