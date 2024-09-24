@@ -4,6 +4,7 @@ from utils.initialize import initialize_chat, load_model
 from utils.gen_avatar import generate_ai_avatar
 from utils.transcribe import record_and_transcribe
 from utils.gen_response import generate_chat_response, generate_and_play_response
+from utils.customize import open_customization_modal
 from PIL import Image
 
 img = Image.open("./nexalogo.png")
@@ -18,7 +19,12 @@ def main():
     with col1:
         st.title("AI Soulmate")
     with col2:
-        st.image(ai_avatar, width=150)
+        st.image(st.session_state.get("ai_avatar", ai_avatar), width=150)
+        st.button(
+            "Customize Character",
+            on_click=open_customization_modal,
+            key="customize_button",
+        )
     st.caption("Powered by Nexa AI")
 
     st.sidebar.header("Model Configuration")
@@ -63,6 +69,29 @@ def main():
     )
 
     initialize_chat()
+
+    # check if customization was just applied:
+    if st.session_state.get("customization_applied", False):
+        name = st.session_state.get("soulmate_name", "Claudia")
+        gender = st.session_state.get("soulmate_gender", "female")
+        custom_instructions = st.session_state.get(
+            "custom_instructions",
+            "You will say cheesy and romantic things to me in a concise way.",
+        )
+        voice_id = st.session_state.get("voice_id", "v2/en_speaker_9")
+
+        introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
+        st.session_state.messages.append({"role": "assistant", "content": introduction})
+
+        with st.chat_message(
+            "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
+        ):
+            st.write(introduction)
+
+        generate_and_play_response(introduction, voice_id)
+
+        st.session_state.customization_applied = False  # reset the flag
+
     for message in st.session_state.messages:
         if message["role"] != "system":
             if message["role"] == "user":
