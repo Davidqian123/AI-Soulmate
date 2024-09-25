@@ -2,6 +2,8 @@ import streamlit as st
 from PIL import Image
 from streamlit_modal import Modal
 from utils.gen_response import generate_and_play_response
+import os
+import shutil
 
 
 def initialize_temp_customization():
@@ -18,9 +20,9 @@ def customize_avatar():
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        avatar_path = "ai_avatar.png"
-        image.save(avatar_path)
-        st.session_state.temp_custom_avatar = avatar_path
+        uploaded_avatar_path = "uploaded_avatar.png"
+        image.save(uploaded_avatar_path)
+        st.session_state.uploaded_avatar = uploaded_avatar_path
         st.image(image, caption="Preview", use_column_width=False)
 
 
@@ -82,16 +84,21 @@ def close_modal():
     st.session_state.modal_open = False
     if "temp_customization" in st.session_state:
         del st.session_state.temp_customization
-    if "temp_custom_avatar" in st.session_state:
-        del st.session_state.temp_custom_avatar
+    if "uploaded_avatar" in st.session_state:
+        if os.path.exists(st.session_state.uploaded_avatar):
+            os.remove(st.session_state.uploaded_avatar)
+        del st.session_state.uploaded_avatar
     st.rerun()
 
 
 def apply_changes():
     # update avatar:
-    if "temp_custom_avatar" in st.session_state:
-        st.session_state.ai_avatar = st.session_state.temp_custom_avatar
-        del st.session_state.temp_custom_avatar
+    if "uploaded_avatar" in st.session_state:
+        permanent_avatar_path = "ai_avatar.png"
+        shutil.copy(st.session_state.uploaded_avatar, permanent_avatar_path)
+        st.session_state.ai_avatar = permanent_avatar_path
+        os.remove(st.session_state.uploaded_avatar)
+        del st.session_state.uploaded_avatar
 
     # update other customization options:
     st.session_state.soulmate_name = st.session_state.temp_customization["name"]

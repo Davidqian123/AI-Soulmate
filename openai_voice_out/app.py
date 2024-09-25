@@ -20,6 +20,8 @@ def main():
         st.title("AI Soulmate")
     with col2:
         avatar_path = st.session_state.get("ai_avatar", "ai_avatar.png")
+        if st.session_state.get("modal_open") and "uploaded_avatar" in st.session_state:
+            avatar_path = st.session_state.uploaded_avatar
         st.image(avatar_path, width=150)
         open_customization_modal()
     st.caption("Powered by Nexa AI")
