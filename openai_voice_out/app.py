@@ -71,7 +71,7 @@ def main():
         name = st.session_state.soulmate_name
         gender = st.session_state.soulmate_gender
         custom_instructions = st.session_state.custom_instructions
-        voice_id = st.session_state.voice_id
+        voice = st.session_state.voice
 
         introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
         st.session_state.messages.append({"role": "assistant", "content": introduction})
@@ -81,7 +81,7 @@ def main():
         ):
             st.write(introduction)
 
-        generate_and_play_response(introduction, voice_id)
+        generate_and_play_response(introduction, voice)
 
         st.session_state.customization_applied = False  # reset the flag
 
@@ -119,7 +119,9 @@ def main():
                     response_placeholder.markdown(full_response, unsafe_allow_html=True)
                 response_placeholder.markdown(full_response)
 
-            audio_path = generate_and_play_response(full_response)
+            audio_path = generate_and_play_response(
+                full_response, st.session_state.voice
+            )
 
             with open(audio_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
@@ -158,7 +160,7 @@ def main():
                 response_placeholder.markdown(full_response, unsafe_allow_html=True)
             response_placeholder.markdown(full_response)
 
-        audio_path = generate_and_play_response(full_response)
+        audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
         with open(audio_path, "rb") as audio_file:
             audio_bytes = audio_file.read()

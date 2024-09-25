@@ -10,7 +10,7 @@ def initialize_temp_customization():
             "name": st.session_state.get("soulmate_name", "Claudia"),
             "gender": st.session_state.get("soulmate_gender", "Female"),
             "custom_instructions": st.session_state.get("custom_instructions", ""),
-            "voice_id": st.session_state.get("voice_id", "v2/en_speaker_9"),
+            "voice": st.session_state.get("voice", "v2/en_speaker_6"),
         }
 
 
@@ -19,15 +19,17 @@ def customize_avatar():
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
         st.session_state.temp_custom_avatar = image
-        st.image(image, caption="Preview", use_column_width=True)
+        st.image(image, caption="Preview", use_column_width=False)
 
 
 def customize_voice():
     voices = {
-        "Female voice 1": "v2/en_speaker_6",
-        "Female voice 2": "v2/en_speaker_9",
-        "Male voice 1": "v2/en_speaker_7",
-        "Male voice 2": "v2/en_speaker_8",
+        "Female (Nova) - Soft and natural": "nova",
+        "Female (Shimmer) - Clear and bright": "shimmer",
+        "Female (Alloy) - Warm and professional": "alloy",
+        "Male (Echo) - Balanced and clear": "echo",
+        "Male (Onyx) - Deep and authoritative": "onyx",
+        "Male (Fable) - British accent, warm": "fable",
     }
     selected_voice = st.selectbox(
         "Choose a voice:", list(voices.keys()), key="temp_voice"
@@ -56,7 +58,7 @@ def customization_form():
     )
 
     st.subheader("3. Choose a Voice")
-    st.session_state.temp_customization["voice_id"] = customize_voice()
+    st.session_state.temp_customization["voice"] = customize_voice()
 
     if st.button("Submit Changes"):
         apply_changes()
@@ -82,7 +84,7 @@ def apply_changes():
     st.session_state.custom_instructions = st.session_state.temp_customization[
         "custom_instructions"
     ]
-    st.session_state.voice_id = st.session_state.temp_customization["voice_id"]
+    st.session_state.voice = st.session_state.temp_customization["voice"]
 
     new_prompt = f"""
     You are {st.session_state.soulmate_name}, my perfect {st.session_state.soulmate_gender.lower()} soulmate. {st.session_state.custom_instructions}
