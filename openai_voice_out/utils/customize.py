@@ -49,23 +49,43 @@ def customization_form():
 
     st.subheader("1. Change Avatar")
     customize_avatar()
+    st.markdown("<br>", unsafe_allow_html=True)
 
     st.subheader("2. Customize Character")
     st.session_state.temp_customization["name"] = st.text_input(
         "Name:", value=st.session_state.temp_customization["name"]
     )
+    st.markdown("<br>", unsafe_allow_html=True)
+
     st.session_state.temp_customization["gender"] = st.radio(
         "Gender:",
         ["Female", "Male"],
         index=0 if st.session_state.temp_customization["gender"] == "Female" else 1,
     )
+    st.markdown("<br>", unsafe_allow_html=True)
+
     st.session_state.temp_customization["custom_instructions"] = st.text_area(
         "Custom Instructions:",
         value=st.session_state.temp_customization["custom_instructions"],
     )
+    st.markdown("<br>", unsafe_allow_html=True)
 
     st.subheader("3. Choose a Voice")
     st.session_state.temp_customization["voice"] = customize_voice()
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # CSS to center the buttons
+    st.markdown(
+        """
+        <style>
+        .stButton > button {
+            display: block;
+            margin: 0 auto;
+        }
+        </style>
+    """,
+        unsafe_allow_html=True,
+    )
 
     col1, col2 = st.columns([1, 1])
 
