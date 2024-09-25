@@ -19,7 +19,8 @@ def main():
     with col1:
         st.title("AI Soulmate")
     with col2:
-        st.image(st.session_state.get("ai_avatar", ai_avatar), width=150)
+        avatar_path = st.session_state.get("ai_avatar", "ai_avatar.png")
+        st.image(avatar_path, width=150)
         open_customization_modal()
     st.caption("Powered by Nexa AI")
 
@@ -40,6 +41,9 @@ def main():
         st.session_state.nexa_model = load_model(model_path)
         if st.session_state.nexa_model is None:
             st.stop()
+
+    if "ai_avatar" not in st.session_state:
+        st.session_state.ai_avatar = generate_ai_avatar()
 
     st.sidebar.header("Generation Parameters")
     temperature = st.sidebar.slider(
@@ -73,15 +77,15 @@ def main():
         custom_instructions = st.session_state.custom_instructions
         voice = st.session_state.voice
 
-        introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
-        st.session_state.messages.append({"role": "assistant", "content": introduction})
+        # introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
+        # st.session_state.messages.append({"role": "assistant", "content": introduction})
 
-        with st.chat_message(
-            "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
-        ):
-            st.write(introduction)
+        # with st.chat_message(
+        #     "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
+        # ):
+        #     st.write(introduction)
 
-        generate_and_play_response(introduction, voice)
+        # generate_and_play_response(introduction, voice)
 
         st.session_state.customization_applied = False  # reset the flag
 
@@ -91,7 +95,9 @@ def main():
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
             else:
-                with st.chat_message(message["role"], avatar=ai_avatar):
+                with st.chat_message(
+                    message["role"], avatar=st.session_state.ai_avatar
+                ):
                     st.markdown(message["content"])
 
     if st.button("🎙️ Start Voice Chat"):

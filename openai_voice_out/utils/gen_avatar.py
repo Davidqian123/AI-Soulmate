@@ -1,6 +1,7 @@
 import streamlit as st
 from nexa.gguf import NexaImageInference
 
+
 @st.cache_resource
 def generate_ai_avatar():
     try:
