@@ -18,12 +18,11 @@ def main():
     with col1:
         st.title("AI Soulmate")
     with col2:
-        st.image(st.session_state.get("ai_avatar", ai_avatar), width=150)
-        st.button(
-            "Customize Character",
-            on_click=open_customization_modal,
-            key="customize_button",
-        )
+        avatar_path = st.session_state.get("ai_avatar", "ai_avatar.png")
+        if st.session_state.get("modal_open") and "uploaded_avatar" in st.session_state:
+            avatar_path = st.session_state.uploaded_avatar
+        st.image(avatar_path, width=150)
+        open_customization_modal()
     st.caption("Powered by Nexa AI")
 
     st.sidebar.header("Model Configuration")
@@ -43,6 +42,9 @@ def main():
         st.session_state.nexa_model = load_model(model_path)
         if st.session_state.nexa_model is None:
             st.stop()
+
+    if "ai_avatar" not in st.session_state:
+        st.session_state.ai_avatar = generate_ai_avatar()
 
     st.sidebar.header("Generation Parameters")
     temperature = st.sidebar.slider(
@@ -71,23 +73,20 @@ def main():
 
     # check if customization was just applied:
     if st.session_state.get("customization_applied", False):
-        name = st.session_state.get("soulmate_name", "Claudia")
-        gender = st.session_state.get("soulmate_gender", "female")
-        custom_instructions = st.session_state.get(
-            "custom_instructions",
-            "You will say cheesy and romantic things to me in a concise way.",
-        )
-        voice_id = st.session_state.get("voice_id", "v2/en_speaker_9")
+        name = st.session_state.soulmate_name
+        gender = st.session_state.soulmate_gender
+        custom_instructions = st.session_state.custom_instructions
+        voice = st.session_state.voice
 
-        introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
-        st.session_state.messages.append({"role": "assistant", "content": introduction})
+        # introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
+        # st.session_state.messages.append({"role": "assistant", "content": introduction})
 
-        with st.chat_message(
-            "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
-        ):
-            st.write(introduction)
+        # with st.chat_message(
+        #     "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
+        # ):
+        #     st.write(introduction)
 
-        generate_and_play_response(introduction, voice_id)
+        # generate_and_play_response(introduction, voice_id)
 
         st.session_state.customization_applied = False  # reset the flag
 
@@ -97,7 +96,9 @@ def main():
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
             else:
-                with st.chat_message(message["role"], avatar=ai_avatar):
+                with st.chat_message(
+                    message["role"], avatar=st.session_state.ai_avatar
+                ):
                     st.markdown(message["content"])
 
     if st.button("🎙️ Start Voice Chat"):
