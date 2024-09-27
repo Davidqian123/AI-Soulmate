@@ -13,19 +13,19 @@ voice_model = NexaVoiceInference(
     compute_type="default",
 )
 
+
 def record_and_transcribe(duration=5, fs=16000):
     info_placeholder = st.empty()
     info_placeholder.info("Recording...")
-    
+
     recording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
     sd.wait()
-    
     info_placeholder.empty()
-    
+
     with NamedTemporaryFile(delete=False, suffix=".wav") as f:
         write(f.name, fs, recording)
         audio_path = f.name
-    
+
     segments, _ = voice_model.model.transcribe(audio_path)
     transcription = "".join(segment.text for segment in segments)
     return transcription

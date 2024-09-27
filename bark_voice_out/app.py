@@ -3,20 +3,26 @@ from utils.initialize import initialize_chat, load_model
 from utils.gen_avatar import generate_ai_avatar
 from utils.transcribe import record_and_transcribe
 from utils.gen_response import generate_chat_response, generate_and_play_response
+from utils.customize import open_customization_modal
 from PIL import Image
 
-img = Image.open("../nexalogo.png")
+img = Image.open("./nexalogo.png")
 st.set_page_config(page_title="AI Soulmate", page_icon=img)
 
 ai_avatar = generate_ai_avatar()
 default_model = "llama3-uncensored"
 
+
 def main():
-    col1, col2 = st.columns([5,5], vertical_alignment = "center")
+    col1, col2 = st.columns([5, 5], vertical_alignment="center")
     with col1:
         st.title("AI Soulmate")
     with col2:
-        st.image(ai_avatar, width=150)
+        avatar_path = st.session_state.get("ai_avatar", "ai_avatar.png")
+        if st.session_state.get("modal_open") and "uploaded_avatar" in st.session_state:
+            avatar_path = st.session_state.uploaded_avatar
+        st.image(avatar_path, width=150)
+        open_customization_modal()
     st.caption("Powered by Nexa AI")
 
     st.sidebar.header("Model Configuration")
@@ -37,6 +43,9 @@ def main():
         if st.session_state.nexa_model is None:
             st.stop()
 
+    if "ai_avatar" not in st.session_state:
+        st.session_state.ai_avatar = generate_ai_avatar()
+
     st.sidebar.header("Generation Parameters")
     temperature = st.sidebar.slider(
         "Temperature", 0.0, 1.0, st.session_state.nexa_model.params["temperature"]
@@ -44,7 +53,9 @@ def main():
     max_new_tokens = st.sidebar.slider(
         "Max New Tokens", 1, 1000, st.session_state.nexa_model.params["max_new_tokens"]
     )
-    top_k = st.sidebar.slider("Top K", 1, 100, st.session_state.nexa_model.params["top_k"])
+    top_k = st.sidebar.slider(
+        "Top K", 1, 100, st.session_state.nexa_model.params["top_k"]
+    )
     top_p = st.sidebar.slider(
         "Top P", 0.0, 1.0, st.session_state.nexa_model.params["top_p"]
     )
@@ -59,19 +70,43 @@ def main():
     )
 
     initialize_chat()
+
+    # check if customization was just applied:
+    if st.session_state.get("customization_applied", False):
+        name = st.session_state.soulmate_name
+        gender = st.session_state.soulmate_gender
+        custom_instructions = st.session_state.custom_instructions
+        voice = st.session_state.voice
+
+        # introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
+        # st.session_state.messages.append({"role": "assistant", "content": introduction})
+
+        # with st.chat_message(
+        #     "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
+        # ):
+        #     st.write(introduction)
+
+        # generate_and_play_response(introduction, voice_id)
+
+        st.session_state.customization_applied = False  # reset the flag
+
     for message in st.session_state.messages:
         if message["role"] != "system":
             if message["role"] == "user":
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
             else:
-                with st.chat_message(message["role"], avatar=ai_avatar):
+                with st.chat_message(
+                    message["role"], avatar=st.session_state.ai_avatar
+                ):
                     st.markdown(message["content"])
 
     if st.button("🎙️ Start Voice Chat"):
         transcribed_text = record_and_transcribe()
         if transcribed_text:
-            st.session_state.messages.append({"role": "user", "content": transcribed_text})
+            st.session_state.messages.append(
+                {"role": "user", "content": transcribed_text}
+            )
             with st.chat_message("user"):
                 st.markdown(transcribed_text)
 
@@ -93,7 +128,9 @@ def main():
 
             generate_and_play_response(full_response)
 
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.messages.append(
+                {"role": "assistant", "content": full_response}
+            )
 
     if prompt := st.chat_input("Say something..."):
         st.session_state.messages.append({"role": "user", "content": prompt})
@@ -118,7 +155,10 @@ def main():
 
         generate_and_play_response(full_response)
 
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.session_state.messages.append(
+            {"role": "assistant", "content": full_response}
+        )
+
 
 if __name__ == "__main__":
     main()
