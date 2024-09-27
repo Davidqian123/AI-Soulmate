@@ -19,7 +19,46 @@ This project is an interactive AI character with voice input, voice output, and 
   - Uncensored model
   - No privacy concerns
 
-- File structure:
+
+### Installation
+
+#### Bark Voice Output(for Cuda Backend)
+
+1. Install required packages:
+
+```
+pip install -r bark_requirements.txt
+```
+
+2. Usage:
+
+- Run the Streamlit app: `streamlit run bark_voice_out/app.py`
+- Start a chat with text or voice as you like
+
+#### OpenAI Voice Output(for All)
+
+1. Install required packages:
+
+```
+pip install -r openai_requirements.txt
+```
+
+2. Usage:
+
+- Add your openai key in utils/gen_response.py line 8
+- Run the Streamlit app: `streamlit run openai_voice_out/app.py`
+- Start a chat with text or voice as you like
+
+
+
+### Technical Architecture
+
+<p align="center">
+  <img src="https://public-storage.nexa4ai.com/ai_soulmate.png" alt="Technical Architecture" width="50%">
+</p>
+
+
+### File Structure
 
   - `bark_voice_out/app.py`: main Streamlit app using Bark for voice output
   - `bark_voice_out/utils/initialize.py`: initializes chat and load model
@@ -33,40 +72,6 @@ This project is an interactive AI character with voice input, voice output, and 
   - `openai_voice_out/utils/transcribe.py`: handles voice input to text transcription
   - `openai_voice_out/utils/gen_response.py`: handles text and voice output
 
-### Technical Architecture
-
-<p align="center">
-  <img src="https://public-storage.nexa4ai.com/ai_soulmate.png" alt="Technical Architecture" width="50%">
-</p>
-
-### Setup
-
-#### Bark Voice Output
-
-1. Install required packages:
-
-```
-pip install -r bark_requirements.txt
-```
-
-2. Usage:
-
-- Run the Streamlit app: `streamlit run bark_voice_out/app.py`
-- Start a chat with text or voice as you like
-
-#### OpenAI Voice Output
-
-1. Install required packages:
-
-```
-pip install -r openai_requirements.txt
-```
-
-2. Usage:
-
-- Add your openai key in utils/gen_response.py line 8
-- Run the Streamlit app: `streamlit run openai_voice_out/app.py`
-- Start a chat with text or voice as you like
 
 ### Roadmap
 
