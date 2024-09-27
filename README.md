@@ -24,8 +24,8 @@ This project is an interactive AI character with voice input, voice output, and 
 #### Prerequisite
 1. Setup [Miniconda](https://docs.anaconda.com/miniconda/miniconda-install/) and create new conda virtual environment
 
-2. Download Nexa SDK
-- [GitHub | Nexa-SDK](https://github.com/NexaAI/nexa-sdk)
+2. Download [Nexa SDK](https://github.com/NexaAI/nexa-sdk)
+   
 
 #### Bark Voice Output(for Cuda Backend)
 
