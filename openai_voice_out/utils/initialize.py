@@ -14,7 +14,7 @@ def initialize_chat():
         st.session_state.voice = "nova"
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_model(model_path):
     st.session_state.messages = []
     nexa_model = NexaTextInference(

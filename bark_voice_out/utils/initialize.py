@@ -9,7 +9,7 @@ def initialize_chat():
     if "messages" not in st.session_state or not st.session_state.messages:
         st.session_state.messages = [{"role": "system", "content": initial_prompt}]
         
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_model(model_path):
     st.session_state.messages = []
     nexa_model = NexaTextInference(

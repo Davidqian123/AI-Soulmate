@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 from nexa.gguf import NexaVoiceInference
 
 voice_model = NexaVoiceInference(
-    model_path="faster-whisper-tiny",
+    model_path="faster-whisper-base",
     local_path=None,
     beam_size=5,
     task="transcribe",

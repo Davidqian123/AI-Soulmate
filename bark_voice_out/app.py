@@ -9,8 +9,12 @@ from PIL import Image
 img = Image.open("./nexalogo.png")
 st.set_page_config(page_title="AI Soulmate", page_icon=img)
 
-ai_avatar = generate_ai_avatar()
+with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. I'll be with you in just a moment~"):
+    ai_avatar = generate_ai_avatar()
+
 default_model = "llama3-uncensored"
+model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama"]
+
 
 
 def main():
@@ -26,7 +30,16 @@ def main():
     st.caption("Powered by Nexa AI")
 
     st.sidebar.header("Model Configuration")
-    model_path = st.sidebar.text_input("Model path", default_model)
+    model_path = st.sidebar.selectbox("Select a Model", model_options, index=model_options.index(default_model))
+    
+    if "current_model_path" not in st.session_state or st.session_state.current_model_path != model_path:
+        st.session_state.current_model_path = model_path
+        with st.spinner("Hang tight! Loading model, I'll be right back with you : )"):
+            st.session_state.nexa_model = load_model(model_path)
+        st.session_state.messages = []
+        
+        if "intro_sent" in st.session_state:
+            del st.session_state["intro_sent"]
 
     if not model_path:
         st.warning(
@@ -39,7 +52,8 @@ def main():
         or st.session_state.current_model_path != model_path
     ):
         st.session_state.current_model_path = model_path
-        st.session_state.nexa_model = load_model(model_path)
+        with st.spinner("Hang tight! Loading model, I'll be right back with you :)"):
+            st.session_state.nexa_model = load_model(model_path)
         if st.session_state.nexa_model is None:
             st.stop()
 
@@ -91,7 +105,7 @@ def main():
         st.session_state.customization_applied = False  # reset the flag
 
     for message in st.session_state.messages:
-        if message["role"] != "system":
+        if message["role"] != "system" and message.get("visible", True):
             if message["role"] == "user":
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
@@ -100,6 +114,32 @@ def main():
                     message["role"], avatar=st.session_state.ai_avatar
                 ):
                     st.markdown(message["content"])
+                    
+    if "intro_sent" not in st.session_state:
+        st.session_state.messages.append({"role": "user", "content": "hello, please intro your self in 30 words.", "visible": False})
+        st.session_state.intro_sent = True
+            
+        with st.chat_message("assistant", avatar=ai_avatar):
+            response_placeholder = st.empty()
+            full_response = ""
+            for chunk in generate_chat_response(st.session_state.nexa_model):
+                choice = chunk["choices"][0]
+                if "delta" in choice:
+                    delta = choice["delta"]
+                    content = delta.get("content", "")
+                elif "text" in choice:
+                    delta = choice["text"]
+                    content = delta
+
+                full_response += content
+                response_placeholder.markdown(full_response, unsafe_allow_html=True)
+            response_placeholder.markdown(full_response)
+            
+        generate_and_play_response(full_response)
+        
+        st.session_state.messages.append(
+            {"role": "assistant", "content": full_response}
+        )
 
     if st.button("🎙️ Start Voice Chat"):
         transcribed_text = record_and_transcribe()
