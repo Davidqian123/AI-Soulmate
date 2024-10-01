@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.initialize import initialize_chat, load_model
+from utils.initialize import initialize_chat, load_model, load_local_model
 from utils.gen_avatar import generate_ai_avatar
 from utils.transcribe import record_and_transcribe
 from utils.gen_response import generate_chat_response, generate_and_play_response
@@ -13,7 +13,7 @@ with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. I'll be wi
     ai_avatar = generate_ai_avatar()
 
 default_model = "llama3-uncensored"
-model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama"]
+model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama", "Local Model"]
 
 
 
@@ -32,10 +32,24 @@ def main():
     st.sidebar.header("Model Configuration")
     model_path = st.sidebar.selectbox("Select a Model", model_options, index=model_options.index(default_model))
     
-    if "current_model_path" not in st.session_state or st.session_state.current_model_path != model_path:
+    if model_path == "Local Model":
+        local_model_path = st.sidebar.text_input("Enter local model path")
+        if not local_model_path:
+            st.warning("Please enter a valid local model path to proceed.")
+            st.stop()
+    else:
+        local_model_path = None
+    
+    if ("current_model_path" not in st.session_state or 
+        st.session_state.current_model_path != model_path or
+        (model_path == "Local Model" and local_model_path != st.session_state.current_local_model_path)):
         st.session_state.current_model_path = model_path
+        st.session_state.current_local_model_path = local_model_path
         with st.spinner("Hang tight! Loading model, I'll be right back with you : )"):
-            st.session_state.nexa_model = load_model(model_path)
+            if model_path == "Local Model" and local_model_path:
+                st.session_state.nexa_model = load_local_model(local_model_path)
+            else:
+                st.session_state.nexa_model = load_model(model_path)
         st.session_state.messages = []
         
         if "intro_sent" in st.session_state:
