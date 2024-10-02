@@ -2,7 +2,7 @@ import streamlit as st
 from nexa.gguf import NexaImageInference
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def generate_ai_avatar():
     try:
         image_model = NexaImageInference(model_path="lcm-dreamshaper", local_path=None)

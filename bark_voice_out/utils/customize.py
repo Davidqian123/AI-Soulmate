@@ -140,6 +140,10 @@ def apply_changes():
     del st.session_state.temp_customization
 
     st.session_state.modal_open = False
+    
+    if "intro_sent" in st.session_state:
+        del st.session_state["intro_sent"]
+        
     # force a rerun to update the UI:
     st.rerun()
 

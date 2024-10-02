@@ -142,6 +142,10 @@ def apply_changes():
     del st.session_state.temp_customization
 
     st.session_state.modal_open = False
+    
+    if "intro_sent" in st.session_state:
+        del st.session_state["intro_sent"]
+        
     # force a rerun to update the UI:
     st.rerun()
 
@@ -149,11 +153,11 @@ def apply_changes():
 def open_customization_modal():
     if "modal_open" not in st.session_state:
         st.session_state.modal_open = False
-
+        
     if st.button("Customize Character"):
         st.session_state.modal_open = True
         initialize_temp_customization()
-
+        
     if st.session_state.modal_open:
         modal = Modal("Customize Your Soulmate", key="customize_modal")
         with modal.container():
