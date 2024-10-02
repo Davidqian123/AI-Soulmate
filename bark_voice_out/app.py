@@ -13,7 +13,7 @@ with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. I'll be wi
     ai_avatar = generate_ai_avatar()
 
 default_model = "llama3-uncensored"
-model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama", "Local Model"]
+model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama", "Use Model From Nexa Model Hub", "Local Model"]
 
 
 
@@ -37,17 +37,29 @@ def main():
         if not local_model_path:
             st.warning("Please enter a valid local model path to proceed.")
             st.stop()
+        hub_model_name = None
+    elif model_path == "Use Model From Nexa Model Hub":
+        hub_model_name = st.sidebar.text_input("Enter model name from Nexa Model Hub")
+        if not hub_model_name:
+            st.warning("Please enter a valid model name to proceed.")
+            st.stop()
+        local_model_path = None
     else:
         local_model_path = None
+        hub_model_name = None
     
     if ("current_model_path" not in st.session_state or 
         st.session_state.current_model_path != model_path or
-        (model_path == "Local Model" and local_model_path != st.session_state.current_local_model_path)):
+        (model_path == "Local Model" and local_model_path != st.session_state.current_local_model_path) or
+        (model_path == "Use Model From Nexa Model Hub" and hub_model_name != st.session_state.current_hub_model_name)):
         st.session_state.current_model_path = model_path
         st.session_state.current_local_model_path = local_model_path
+        st.session_state.current_hub_model_name = hub_model_name
         with st.spinner("Hang tight! Loading model, I'll be right back with you : )"):
             if model_path == "Local Model" and local_model_path:
                 st.session_state.nexa_model = load_local_model(local_model_path)
+            elif model_path == "Use Model From Nexa Model Hub" and hub_model_name:
+                st.session_state.nexa_model = load_model(hub_model_name)
             else:
                 st.session_state.nexa_model = load_model(model_path)
         st.session_state.messages = []
