@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import base64
 from utils.initialize import initialize_chat, load_model, load_local_model
@@ -14,7 +15,7 @@ with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. I'll be wi
     ai_avatar = generate_ai_avatar()
 
 default_model = "llama3-uncensored"
-model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama", "Local Model"]
+model_options = ["llama3-uncensored", "llama2", "llama3.1", "tinyllama", "Use Model From Nexa Model Hub","Local Model"]
 
 def main():
     col1, col2 = st.columns([5, 5], vertical_alignment="center")
@@ -36,17 +37,29 @@ def main():
         if not local_model_path:
             st.warning("Please enter a valid local model path to proceed.")
             st.stop()
+        hub_model_name = None
+    elif model_path == "Use Model From Nexa Model Hub":
+        hub_model_name = st.sidebar.text_input("Enter model name from Nexa Model Hub")
+        if not hub_model_name:
+            st.warning("Please enter a valid model name to proceed.")
+            st.stop()
+        local_model_path = None
     else:
         local_model_path = None
+        hub_model_name = None
     
     if ("current_model_path" not in st.session_state or 
         st.session_state.current_model_path != model_path or
-        (model_path == "Local Model" and local_model_path != st.session_state.current_local_model_path)):
+        (model_path == "Local Model" and local_model_path != st.session_state.current_local_model_path) or
+        (model_path == "Use Model From Nexa Model Hub" and hub_model_name != st.session_state.current_hub_model_name)):
         st.session_state.current_model_path = model_path
         st.session_state.current_local_model_path = local_model_path
+        st.session_state.current_hub_model_name = hub_model_name
         with st.spinner("Hang tight! Loading model, I'll be right back with you : )"):
             if model_path == "Local Model" and local_model_path:
                 st.session_state.nexa_model = load_local_model(local_model_path)
+            elif model_path == "Use Model From Nexa Model Hub" and hub_model_name:
+                st.session_state.nexa_model = load_model(hub_model_name)
             else:
                 st.session_state.nexa_model = load_model(model_path)
         st.session_state.messages = []
@@ -59,16 +72,6 @@ def main():
             "Please enter a valid path or identifier for the model in Nexa Model Hub to proceed."
         )
         st.stop()
-
-    if (
-        "current_model_path" not in st.session_state
-        or st.session_state.current_model_path != model_path
-    ):
-        st.session_state.current_model_path = model_path
-        with st.spinner("Hang tight! Loading model, I'll be right back with you :)"):
-            st.session_state.nexa_model = load_model(model_path)
-        if st.session_state.nexa_model is None:
-            st.stop()
 
     if "ai_avatar" not in st.session_state:
         st.session_state.ai_avatar = generate_ai_avatar()
@@ -97,24 +100,10 @@ def main():
     )
 
     initialize_chat()
-
+    enable_voice = os.getenv("VOICEOUT", "false").lower() == "true"
+    
     # check if customization was just applied:
     if st.session_state.get("customization_applied", False):
-        name = st.session_state.soulmate_name
-        gender = st.session_state.soulmate_gender
-        custom_instructions = st.session_state.custom_instructions
-        voice = st.session_state.voice
-
-        # introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
-        # st.session_state.messages.append({"role": "assistant", "content": introduction})
-
-        # with st.chat_message(
-        #     "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
-        # ):
-        #     st.write(introduction)
-
-        # generate_and_play_response(introduction, voice)
-
         st.session_state.customization_applied = False  # reset the flag
 
     for message in st.session_state.messages:
@@ -148,19 +137,20 @@ def main():
                 response_placeholder.markdown(full_response, unsafe_allow_html=True)
             response_placeholder.markdown(full_response)
             
-        audio_path = generate_and_play_response(full_response, st.session_state.voice)
+        if enable_voice:    
+            audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-        with open(audio_path, "rb") as audio_file:
-            audio_bytes = audio_file.read()
-            audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        st.markdown(
-            f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-            </audio>
-        """,
-            unsafe_allow_html=True,
-        )
+            with open(audio_path, "rb") as audio_file:
+                audio_bytes = audio_file.read()
+                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+            st.markdown(
+                f"""
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                </audio>
+            """,
+                unsafe_allow_html=True,
+            )
 
         st.session_state.messages.append(
             {"role": "assistant", "content": full_response}
@@ -190,22 +180,21 @@ def main():
                     full_response += content
                     response_placeholder.markdown(full_response, unsafe_allow_html=True)
                 response_placeholder.markdown(full_response)
+                
+            if enable_voice:
+                audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-            audio_path = generate_and_play_response(
-                full_response, st.session_state.voice
-            )
-
-            with open(audio_path, "rb") as audio_file:
-                audio_bytes = audio_file.read()
-                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-            st.markdown(
-                f"""
-                <audio autoplay>
-                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-                </audio>
-            """,
-                unsafe_allow_html=True,
-            )
+                with open(audio_path, "rb") as audio_file:
+                    audio_bytes = audio_file.read()
+                    audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+                st.markdown(
+                    f"""
+                    <audio autoplay>
+                        <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                    </audio>
+                """,
+                    unsafe_allow_html=True,
+                )
 
             st.session_state.messages.append(
                 {"role": "assistant", "content": full_response}
@@ -231,20 +220,21 @@ def main():
                 full_response += content
                 response_placeholder.markdown(full_response, unsafe_allow_html=True)
             response_placeholder.markdown(full_response)
+            
+        if enable_voice:
+            audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-        audio_path = generate_and_play_response(full_response, st.session_state.voice)
-
-        with open(audio_path, "rb") as audio_file:
-            audio_bytes = audio_file.read()
-            audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        st.markdown(
-            f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-            </audio>
-        """,
-            unsafe_allow_html=True,
-        )
+            with open(audio_path, "rb") as audio_file:
+                audio_bytes = audio_file.read()
+                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+            st.markdown(
+                f"""
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                </audio>
+            """,
+                unsafe_allow_html=True,
+            )
 
         st.session_state.messages.append(
             {"role": "assistant", "content": full_response}

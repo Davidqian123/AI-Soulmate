@@ -29,18 +29,13 @@ def load_model(model_path):
 
 @st.cache_resource(show_spinner=False)
 def load_local_model(local_path):
-    """
-    Loads a local model from the given local path.
-    """
     st.session_state.messages = []
-    
     nexa_model = NexaTextInference(
-        model_path=None,
+        model_path="llama3-uncensored",
         local_path=local_path,
         temperature=0.9,
         max_new_tokens=256,
         top_k=50,
         top_p=1.0,
     )
-    
     return nexa_model

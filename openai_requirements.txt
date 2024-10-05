@@ -1,4 +1,5 @@
 nexaai
+streamlit_modal
 sounddevice
 
 # OpenAI API support

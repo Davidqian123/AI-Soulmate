@@ -50,8 +50,30 @@ pip install -r openai_requirements.txt
 
 2. Usage:
 
-- Add your openai key in utils/gen_response.py line 8
-- Run the Streamlit app: `streamlit run openai_voice_out/app.py`
+- Set your openai api key in your terminal. If you don't have a key, ignore this step:
+
+  For Windows:
+  ```
+  set OPENAI_API_KEY="your_api_key"
+  ```
+  For macOS/Linux:
+  ```
+  export OPENAI_API_KEY="your_api_key"
+  ```
+- Set voice output on in your terminal. If you don't set openai api key or you don't want to use voice output, leave it false:
+
+  For Windows:
+  ```
+  set VOICEOUT=true
+  ```
+  For macOS/Linux:
+  ```
+  export VOICEOUT=true
+  ```
+- Run the Streamlit app: 
+  ```
+  streamlit run openai_voice_out/app.py
+  ```
 - Start a chat with text or voice as you like
 
 
