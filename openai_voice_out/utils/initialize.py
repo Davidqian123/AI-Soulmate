@@ -31,7 +31,7 @@ def load_model(model_path):
 def load_local_model(local_path):
     st.session_state.messages = []
     nexa_model = NexaTextInference(
-        model_path=None,
+        model_path="llama3-uncensored",
         local_path=local_path,
         temperature=0.9,
         max_new_tokens=256,
