@@ -140,17 +140,17 @@ def main():
         if enable_voice:    
             audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-        with open(audio_path, "rb") as audio_file:
-            audio_bytes = audio_file.read()
-            audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        st.markdown(
-            f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-            </audio>
-        """,
-            unsafe_allow_html=True,
-        )
+            with open(audio_path, "rb") as audio_file:
+                audio_bytes = audio_file.read()
+                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+            st.markdown(
+                f"""
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                </audio>
+            """,
+                unsafe_allow_html=True,
+            )
 
         st.session_state.messages.append(
             {"role": "assistant", "content": full_response}
@@ -184,17 +184,17 @@ def main():
             if enable_voice:
                 audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-            with open(audio_path, "rb") as audio_file:
-                audio_bytes = audio_file.read()
-                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-            st.markdown(
-                f"""
-                <audio autoplay>
-                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-                </audio>
-            """,
-                unsafe_allow_html=True,
-            )
+                with open(audio_path, "rb") as audio_file:
+                    audio_bytes = audio_file.read()
+                    audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+                st.markdown(
+                    f"""
+                    <audio autoplay>
+                        <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                    </audio>
+                """,
+                    unsafe_allow_html=True,
+                )
 
             st.session_state.messages.append(
                 {"role": "assistant", "content": full_response}
@@ -224,17 +224,17 @@ def main():
         if enable_voice:
             audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
-        with open(audio_path, "rb") as audio_file:
-            audio_bytes = audio_file.read()
-            audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-        st.markdown(
-            f"""
-            <audio autoplay>
-                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
-            </audio>
-        """,
-            unsafe_allow_html=True,
-        )
+            with open(audio_path, "rb") as audio_file:
+                audio_bytes = audio_file.read()
+                audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
+            st.markdown(
+                f"""
+                <audio autoplay>
+                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+                </audio>
+            """,
+                unsafe_allow_html=True,
+            )
 
         st.session_state.messages.append(
             {"role": "assistant", "content": full_response}
