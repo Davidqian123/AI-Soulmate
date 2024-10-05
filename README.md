@@ -51,6 +51,7 @@ pip install -r openai_requirements.txt
 2. Usage:
 
 - Set your openai api key in your terminal. If you don't have a key, ignore this step:
+
   For Windows:
   ```
   set OPENAI_API_KEY="your_api_key"
@@ -60,6 +61,7 @@ pip install -r openai_requirements.txt
   export OPENAI_API_KEY="your_api_key"
   ```
 - Set voice output on in your terminal. If you don't set openai api key or you don't want to use voice output, leave it false:
+
   For Windows:
   ```
   set VOICEOUT=true
