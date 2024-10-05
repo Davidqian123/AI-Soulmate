@@ -1,4 +1,5 @@
 nexaai
+streamlit_modal
 sounddevice
 
 # Bark support

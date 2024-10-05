@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import base64
 from utils.initialize import initialize_chat, load_model, load_local_model
@@ -99,24 +100,10 @@ def main():
     )
 
     initialize_chat()
-
+    enable_voice = os.getenv("VOICEOUT", "false").lower() == "true"
+    
     # check if customization was just applied:
     if st.session_state.get("customization_applied", False):
-        name = st.session_state.soulmate_name
-        gender = st.session_state.soulmate_gender
-        custom_instructions = st.session_state.custom_instructions
-        voice = st.session_state.voice
-
-        # introduction = f"Hi, I'm {name}, your perfect {gender.lower()} soulmate. {custom_instructions}"
-        # st.session_state.messages.append({"role": "assistant", "content": introduction})
-
-        # with st.chat_message(
-        #     "assistant", avatar=st.session_state.get("ai_avatar", ai_avatar)
-        # ):
-        #     st.write(introduction)
-
-        # generate_and_play_response(introduction, voice)
-
         st.session_state.customization_applied = False  # reset the flag
 
     for message in st.session_state.messages:
@@ -150,7 +137,8 @@ def main():
                 response_placeholder.markdown(full_response, unsafe_allow_html=True)
             response_placeholder.markdown(full_response)
             
-        audio_path = generate_and_play_response(full_response, st.session_state.voice)
+        if enable_voice:    
+            audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
         with open(audio_path, "rb") as audio_file:
             audio_bytes = audio_file.read()
@@ -192,10 +180,9 @@ def main():
                     full_response += content
                     response_placeholder.markdown(full_response, unsafe_allow_html=True)
                 response_placeholder.markdown(full_response)
-
-            audio_path = generate_and_play_response(
-                full_response, st.session_state.voice
-            )
+                
+            if enable_voice:
+                audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
             with open(audio_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
@@ -233,8 +220,9 @@ def main():
                 full_response += content
                 response_placeholder.markdown(full_response, unsafe_allow_html=True)
             response_placeholder.markdown(full_response)
-
-        audio_path = generate_and_play_response(full_response, st.session_state.voice)
+            
+        if enable_voice:
+            audio_path = generate_and_play_response(full_response, st.session_state.voice)
 
         with open(audio_path, "rb") as audio_file:
             audio_bytes = audio_file.read()
