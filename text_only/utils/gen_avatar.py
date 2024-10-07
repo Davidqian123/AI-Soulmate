@@ -19,6 +19,7 @@ def generate_ai_avatar():
         if images and len(images) > 0:
             avatar_path = "ai_avatar.png"
             images[0].save(avatar_path)
+            return avatar_path
         else:
             st.error("No image was generated.")
             return None
