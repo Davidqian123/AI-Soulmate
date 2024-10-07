@@ -10,16 +10,7 @@ from PIL import Image
 img = Image.open("./nexalogo.png")
 st.set_page_config(page_title="AI Soulmate", page_icon=img)
 
-# def progress_bar_ui(task_name, max_steps):
-#     progress_bar = st.progress(0)
-#     for step in tqdm(range(max_steps), desc=task_name):
-#         time.sleep(0.1)  # Simulate some processing time
-#         progress_percentage = (step + 1) / max_steps
-#         progress_bar.progress(progress_percentage)
-#     progress_bar.empty()
-
-with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. I'll be with you in just a moment~"):
-    # progress_bar_ui("Generating Avatar",100)
+with st.spinner("Hi, I'm your AI soulmate, I'm generating avatar now. You can check the progress in the terminal. I'll be with you in just a moment~"):
     ai_avatar = generate_ai_avatar()
 
 default_model = "llama3-uncensored"
@@ -79,8 +70,7 @@ def main():
         st.session_state.current_model_path = model_path
         st.session_state.current_local_model_path = local_model_path
         st.session_state.current_hub_model_name = hub_model_name
-        with st.spinner("Hang tight! Loading model, I'll be right back with you : )"):
-            # progress_bar_ui("Downloading Model", 100)
+        with st.spinner("Hang tight! Loading model, you can check the progress in the terminal. I'll be right back with you : )"):
             if model_path == "Local Model" and local_model_path:
                 st.session_state.nexa_model = load_local_model(local_model_path)
             elif model_path == "Use Model From Nexa Model Hub" and hub_model_name:
