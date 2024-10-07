@@ -1,6 +1,4 @@
-import time
 import streamlit as st
-from tqdm import tqdm
 from utils.initialize import initialize_chat, load_model, load_local_model
 from utils.gen_avatar import generate_ai_avatar
 from utils.gen_response import generate_chat_response
